@@ -41,8 +41,6 @@ void BFSqueue(vector<vector<int>> G, int start) {
     }
 }
 
-
-
 void enqueue(int value) {
     struct node* p = (struct node*)malloc(sizeof(struct node));
     if (p == NULL) {
@@ -81,38 +79,30 @@ int dequeue(void) {
     return value;
 }
 
-void BFS(int** G, int n, int start) {
-    int* visited = (int*)malloc(n * sizeof(int));
-    
-    for (int i = 0; i < n; i++) visited[i] = 0;
+void BFS(const vector<vector<int>>& G, int start) {
+    int n = G.size();
+    vector<bool> visited(n, false);
 
     enqueue(start);
-    visited[start] = 1;
+    visited[start] = true;
 
     while (!isQueueEmpty()) {
         int v = dequeue();
-        printf("%d ", v + 1);
+        cout << v + 1 << " ";
 
         for (int i = 0; i < n; i++) {
             if (G[v][i] == 1 && !visited[i]) {
                 enqueue(i);
-                visited[i] = 1;
+                visited[i] = true;
             }
         }
     }
-    free(visited);
 }
 
 
 
-int** generateG(int versh) {
-    int** G = (int**)malloc(versh * sizeof(int*));
-    for (int i = 0; i < versh; i++) {
-        G[i] = (int*)malloc(versh * sizeof(int));
-        for (int j = 0; j < versh; j++) {
-            G[i][j] = 0;
-        }
-    }
+vector<vector<int>> generateG(int versh) {
+    vector<vector<int>> G(versh, vector<int>(versh, 0));
 
     for (int i = 0; i < versh; i++) {
         for (int j = i + 1; j < versh; j++) {
@@ -125,11 +115,11 @@ int** generateG(int versh) {
     return G;
 }
 
-void printG(int** G, int versh) {
+void printG(const vector<vector<int>>& G) {
     printf("Матрица смежности: \n");
-    for (int i = 0; i < versh; i++) {
-        for (int j = 0; j < versh; j++) {
-            printf("%d ", G[i][j]);
+    for (const auto& row : G) {
+        for (int val : row) {
+            printf("%d ", val);
         }
         printf("\n");
     }
@@ -145,37 +135,26 @@ int main() {
     printf("Введите количество вершин графа: ");
     scanf("%d", &versh);
 
-    int** G = NULL;
-    G = generateG(versh);
-    printG(G, versh);
+    vector<vector<int>> G = generateG(versh);
+    printG(G);
 
-    printf("\nОбход в ширину (Очередь на основе списка из лабы 3):\n");
+    cout << endl << "Обход в ширину (Очередь на основе списка из лабы 3):" << endl;
     clock_t start, end;
 
     start = clock();
-    BFS(G, versh, 0);
+    BFS(G, 0);
     end = clock();
 
     float bfs = (double)(end - start) / CLOCKS_PER_SEC;
-    
-    printf("\nВремя выполнения (Очередь на основе списка из лабы 3): %f секунд\n", bfs);
-    
-
-    vector<vector<int>> G1(versh, vector<int>(versh, 0));
-    for (int i = 0; i < versh; i++) {
-        for (int j = 0; j < versh; j++) {
-            G1[i][j] = G[i][j];
-        }
-    }
+    cout << endl << "Время выполнения (Очередь на основе списка из лабы 3): " << bfs << "секунд" << endl;
 
     cout << endl << "Обход в ширину (Queue):" << endl;
 
     start = clock();
-    BFSqueue(G1, 0);
+    BFSqueue(G, 0);
     end = clock();
 
     float bfsQ = (double)(end - start) / CLOCKS_PER_SEC;
-    
-    printf("\nВремя выполнения (Queue): %f секунд\n", bfsQ);
-    printf("\nВремя выполнения (Queue: %f) - (Очередь на основе списка из лабы 3: %f): %f секунд\n", bfsQ, bfs, bfsQ - bfs);
+    cout << endl << "Время выполнения (Queue): " << bfsQ << "секунд" << endl;
+    cout << endl << "Время выполнения (Queue: " << bfsQ << ") - (Очередь на основе списка из лабы 3: " << bfs << "): " << bfsQ - bfs << " секунд"<< endl;
 }
