@@ -7,73 +7,7 @@
 //#include <cstdlib>
 //#include <windows.h>
 //
-////using namespace std;
-////
-////vector<vector<int>> generateG(int versh) {
-////	vector<vector<int>> G(versh, vector<int>(versh, 0));
-////
-////	for (int i = 0; i < versh; i++) {
-////		for (int j = i+1; j < versh; j++) {
-////			if (rand() % 2 == 1) {
-////				G[i][j] = 1;
-////				G[j][i] = 1;
-////			}
-////		}
-////	}
-////	return G;
-////}
-////
-////void printG(vector<vector<int>>& G) {
-////	cout << "Матрица смежности: " << endl;
-////	for (int i = 0; i < G.size(); i++) {
-////		for (int val : G[i]) {
-////			cout << val << " ";
-////		}
-////		cout << endl;
-////	}
-////}
-////
-////void BFS(vector<vector<int>> G, int start) {
-////	int n = G.size();
-////	vector<bool> visited(n, false);
-////	queue<int> Q;
-////
-////	Q.push(start);
-////	visited[start] = true;
-////
-////	while (!Q.empty()) {
-////		int v = Q.front();
-////		Q.pop();
-////		cout << v+1 << " ";
-////
-////		for (int i = 0; i < n; ++i) {
-////			if (G[v][i] == 1 && !visited[i]) {
-////				Q.push(i);
-////				visited[i] = true;
-////			}
-////		}
-////	}
-////}
-////
-////int main() {
-////	SetConsoleCP(1251);
-////	SetConsoleOutputCP(1251);
-////
-////	srand(5435234623462343726);
-////
-////	int versh;
-////	cout << "Введите количество вершин графа: ";
-////	cin >> versh;
-////
-////	vector<vector<int>> G1 = generateG(versh);
-////	printG(G1);
-////
-////	cout << endl << "Обход в ширину:" << endl;
-////	BFS(G1, 0);
-////	cout << endl;
-////}
-//
-//#define MAX_VERTICES 100
+//using namespace std;
 //
 //struct node {
 //	int vertex;
@@ -145,6 +79,40 @@
 //	return graph;
 //}
 //
+//int compare(const void* a, const void* b) {
+//	return (*(int*)a - *(int*)b);
+//}
+//
+//void sortAdjacencyList(struct Graph* graph, int N) {
+//	for (int i = 0; i < N; i++) {
+//		int count = 0;
+//		struct node* temp = graph->adjLists[i];
+//		while (temp != NULL) {
+//			count++;
+//			temp = temp->next;
+//		}
+//
+//		int* vertices = (int*)malloc(count * sizeof(int));
+//		temp = graph->adjLists[i];
+//		int index = 0;
+//		while (temp != NULL) {
+//			vertices[index++] = temp->vertex;
+//			temp = temp->next;
+//		}
+//
+//		qsort(vertices, count, sizeof(int), compare);
+//
+//		temp = graph->adjLists[i];
+//		index = 0;
+//		while (temp != NULL) {
+//			temp->vertex = vertices[index++];
+//			temp = temp->next;
+//		}
+//
+//		free(vertices);
+//	}
+//}
+//
 //void printGraph(struct Graph* graph) {
 //	for (int v = 0; v < graph->numVertices; v++) {
 //		struct node* temp = graph->adjLists[v];
@@ -185,31 +153,66 @@
 //	return;
 //}
 //
-//void BFS(struct Graph* graph, int start) {
-//    bool visited[MAX_VERTICES] = { false };
-//	int queue[MAX_VERTICES];
-//    int front = 0, rear = 0;
+//void printGCpp(vector<vector<int>>& G) {
+//	cout << "Матрица смежности: " << endl;
+//	for (int i = 0; i < G.size(); i++) {
+//		for (int val : G[i]) {
+//			cout << val << " ";
+//		}
+//		cout << endl;
+//	}
+//}
 //
-//    visited[start] = true;
-//    queue[rear++] = start;
+//void BFS(struct Graph* graph, int start, int size) {
+//	bool* visited = (bool*)malloc(size * sizeof(bool));//!!!
+//	for (int i = 0; i < size; i++) {
+//		visited[i] = false;
+//	}
+//	int* queue = (int*)malloc(size * sizeof(int));//!!!
+//	int front = 0, rear = 0;
 //
-//    printf("Результатобхода в ширину: : ", start + 1);
+//	visited[start] = true;
+//	queue[rear++] = start;
 //
-//    while (front < rear) {
-//        int currentVertex = queue[front++];
-//        printf("%d ", currentVertex + 1);
+//	printf("Результатобхода в ширину: : ", start + 1);
 //
-//        struct node* temp = graph->adjLists[currentVertex];
-//        while (temp) {
-//            int adjVertex = temp->vertex;
-//            if (!visited[adjVertex]) {
-//                visited[adjVertex] = true;
-//                queue[rear++] = adjVertex;
-//            }
-//            temp = temp->next;
-//        }
-//    }
-//    printf("\n");
+//	while (front < rear) {
+//		int currentVertex = queue[front++];// и по матрице и по списку смежности
+//		printf("%d ", currentVertex + 1);
+//
+//		struct node* temp = graph->adjLists[currentVertex];
+//		while (temp) {
+//			int adjVertex = temp->vertex;
+//			if (!visited[adjVertex]) {
+//				visited[adjVertex] = true;
+//				queue[rear++] = adjVertex;
+//			}
+//			temp = temp->next;
+//		}
+//	}
+//	printf("\n");
+//}
+//
+//void BFS_mat(vector<vector<int>> G, int start) {
+//	int n = G.size();
+//	vector<bool> visited(n, false);
+//	queue<int> Q;
+//
+//	Q.push(start);
+//	visited[start] = true;
+//
+//	while (!Q.empty()) {
+//		int v = Q.front();
+//		Q.pop();
+//		cout << v + 1 << " ";
+//
+//		for (int i = 0; i < n; ++i) {
+//			if (G[v][i] == 1 && !visited[i]) {
+//				Q.push(i);
+//				visited[i] = true;
+//			}
+//		}
+//	}
 //}
 //
 //int main(void) {
@@ -224,8 +227,22 @@
 //	G1 = createG(sizeG1);
 //	printf("1 graf\n");
 //	printG(G1, sizeG1);
-//	struct Graph* graph1 = edges(G1, sizeG1);
-//	printGraph(graph1);
 //
-//	BFS(graph1, 0);
+//	printf("Списки смежности: ");
+//	struct Graph* graph1 = edges(G1, sizeG1);
+//	sortAdjacencyList(graph1, sizeG1);
+//	printGraph(graph1);
+//	BFS(graph1, 0, sizeG1);
+//
+//	vector<vector<int>> G2(sizeG1, vector<int>(sizeG1, 0));
+//	for (int i = 0; i < sizeG1; i++) {
+//		for (int j = 0; j < sizeG1; j++) {
+//			G2[i][j] = G1[i][j];
+//		}
+//	}
+//
+//	printGCpp(G2);
+//	cout << endl << "Обход в ширину:" << endl;
+//	BFS_mat(G2, 0);
+//	cout << endl;
 //}
